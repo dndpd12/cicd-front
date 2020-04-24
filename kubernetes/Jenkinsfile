@@ -49,13 +49,14 @@ containerTemplate(name: 'kubectl', image: 'roffe/kubectl', command: 'cat', ttyEn
 
 		// #4 Sonarqube 정적분석 Stage
 		stage('Static Code Analysis') {
-container('scanner') {
-sh "sonar-scanner \
--Dsonar.projectName=${sonarQubeProject} \
--Dsonar.host.url=${sonarQubeURL} \
--Dsonar.projectBaseDir=./ \
-}
-}
+			container('scanner') {
+				sh "sonar-scanner \
+					-Dsonar.projectKey=${sonarQubeProject} \
+					-Dsonar.projectName=${sonarQubeProject} \
+					-Dsonar.projectBaseDir=./ \
+					-Dsonar.host.url=${sonarQubeURL}"
+			}
+		}
 		// #5 컨테이너 이미지 생성 Stage
 Dockerfile -t ${image}:${tag} ${WORKSPACE}"
 sh "docker push ${image}:${tag}"
